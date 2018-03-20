@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstdio>
+#include <deque>
+using namespace std;
+deque<int> now;
+char str[30];
+int counter;
+void Back();
+void Front();
+void Reverse();
+void PushBack();
+void ToFront();
+int main()
+{
+    int q;
+    scanf("%d",&q);
+    counter=0;
+    for(int i=1;i<=q;i++)
+    {
+        scanf("%s",str);
+        if(str[0]=='b')
+            Back();
+        else if(str[0]=='f')
+            Front();
+        else if(str[0]=='r')
+            Reverse();
+        else if(str[0]=='p')
+            PushBack();
+        else
+            ToFront();
+    }
+}
+void Back()
+{
+    if(now.size()==0)
+    {
+        printf("No job for Ada?\n");
+        return;
+    }
+    if(counter%2==0)
+    {
+        printf("%d\n",now.back());
+        now.pop_back();
+    }
+    else
+    {
+        printf("%d\n",now.front());
+        now.pop_front();
+    }
+}
+void Front()
+{
+    if(now.size()==0)
+    {
+        printf("No job for Ada?\n");
+        return;
+    }
+    if(counter%2==0)
+    {
+        printf("%d\n",now.front());
+        now.pop_front();
+    }
+    else
+    {
+        printf("%d\n",now.back());
+        now.pop_back();
+    }
+}
+void Reverse()
+{
+    counter++;
+}
+void PushBack()
+{
+    int num;
+    scanf("%d",&num);
+    if(counter%2==0)
+        now.push_back(num);
+    else
+        now.push_front(num);
+}
+void ToFront()
+{
+    int num;
+    scanf("%d",&num);
+    if(counter%2==0)
+        now.push_front(num);
+    else
+        now.push_back(num);
+}

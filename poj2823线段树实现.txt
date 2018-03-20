@@ -1,0 +1,79 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+using namespace std;
+const int maxn=1e6;
+const int Min=-1e9;
+const int Max=1e9;
+struct SegTreeNode
+{
+    int value1,value2;
+};
+SegTreeNode tree[maxn*4+100];
+int number[maxn+100];
+vector<int> ans1,ans2;
+void Build(int root,int l,int r);
+void Query(int root,int l,int r,int ql,int qr,int &a,int &b);
+int main()
+{
+    int n,k;
+    scanf("%d%d",&n,&k);
+    for(int i=1;i<=n;i++)
+        scanf("%d",&number[i]);
+    Build(1,1,n);
+    for(int i=1;i<=n-k+1;i++)
+    {
+        int num1,num2;
+        Query(1,1,n,i,i+k-1,num1,num2);
+        ans1.push_back(num1);
+        ans2.push_back(num2);
+    }
+    for(int i=0;i<ans1.size();i++)
+    {
+        if(i)
+            printf(" ");
+        printf("%d",ans1[i]);
+    }
+    printf("\n");
+    for(int i=0;i<ans2.size();i++)
+    {
+        if(i)
+            printf(" ");
+        printf("%d",ans2[i]);
+    }
+    printf("\n");
+    return 0;
+}
+void Build(int root,int l,int r)
+{
+    if(l==r)
+    {
+        tree[root].value1=tree[root].value2=number[l];
+        return;
+    }
+    int mid=(l+r)/2;
+    Build(root*2,l,mid);
+    Build(root*2+1,mid+1,r);
+    tree[root].value1=min(tree[root*2].value1,tree[root*2+1].value1);
+    tree[root].value2=max(tree[root*2].value2,tree[root*2+1].value2);
+}
+void Query(int root,int l,int r,int ql,int qr,int &a,int &b)
+{
+    if(l>qr||r<ql)
+    {
+        a=Max,b=Min;
+        return;
+    }
+    if(ql<=l&&qr>=r)
+    {
+        a=tree[root].value1;
+        b=tree[root].value2;
+        return;
+    }
+    int mid=(l+r)/2;
+    int num1,num2,num3,num4;
+    Query(root*2,l,mid,ql,qr,num1,num2);
+    Query(root*2+1,mid+1,r,ql,qr,num3,num4);
+    a=min(num1,num3);
+    b=max(num2,num4);
+}

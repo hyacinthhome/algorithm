@@ -1,0 +1,179 @@
+#include <iostream>
+#include <cstdio>
+#include <deque>
+#include <vector>
+#include <cstring>
+using namespace std;
+deque<int> Left,Mid,Right;
+vector<int> ans;
+int n,L,R,counter,number[500010];
+char str[25];
+void init();
+void MoveLeft_L();
+void MoveLeft_R();
+void MoveRight_L();
+void MoveRight_R();
+void Insert_L(int num);
+void Insert_R(int num);
+void Delete_L();
+void Delete_R();
+void Reverse();
+int main()
+{
+    int t,m,num;
+    scanf("%d",&t);
+    while(t--)
+    {
+        counter=0;
+        scanf("%d",&n);
+        for(int i=1;i<=n;i++)
+            scanf("%d",&number[i]);
+        scanf("%d%d",&L,&R);
+        init();
+        scanf("%d",&m);
+        for(int i=1;i<=m;i++)
+        {
+            scanf("%s",str);
+            if(str[0]=='M'&&strlen(str)==8)
+            {
+                scanf("%s",str);
+                if(str[0]=='L')
+                    MoveLeft_L();
+                else
+                    MoveLeft_R();
+            }
+            else if(str[0]=='M'&&strlen(str)==9)
+            {
+                scanf("%s",str);
+                if(str[0]=='L')
+                    MoveRight_L();
+                else
+                    MoveRight_R();
+            }
+            else if(str[0]=='I')
+            {
+                scanf("%s",str);
+                scanf("%d",&num);
+                if(str[0]=='L')
+                    Insert_L(num);
+                else
+                    Insert_R(num);
+            }
+            else if(str[0]=='D')
+            {
+                scanf("%s",str);
+                if(str[0]=='L')
+                    Delete_L();
+                else
+                    Delete_R();
+            }
+            else
+                Reverse();
+        }
+        for(int i=0;i<Left.size();i++)
+            ans.push_back(Left[i]);
+        if(counter%2==0)
+            for(int i=0;i<Mid.size();i++)
+            ans.push_back(Mid[i]);
+        else
+            for(int i=Mid.size()-1;i>=0;i--)
+            ans.push_back(Mid[i]);
+        for(int i=0;i<Right.size();i++)
+            ans.push_back(Right[i]);
+        for(int i=0;i<ans.size();i++)
+        {
+            if(i)
+                printf(" ");
+            printf("%d",ans[i]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+void init()
+{
+    ans.clear();
+    Left.clear();
+    Mid.clear();
+    Right.clear();
+    for(int i=1;i<L;i++)
+        Left.push_back(number[i]);
+    for(int i=L;i<=R;i++)
+        Mid.push_back(number[i]);
+    for(int i=R+1;i<=n;i++)
+        Right.push_back(number[i]);
+}
+void MoveLeft_L()
+{
+    if(counter%2==0)
+        Mid.push_front(Left.back());
+    else
+        Mid.push_back(Left.back());
+    Left.pop_back();
+}
+void MoveLeft_R()
+{
+    if(counter%2==0)
+    {
+        Right.push_front(Mid.back());
+        Mid.pop_back();
+    }
+    else
+    {
+        Right.push_front(Mid.front());
+        Mid.pop_front();
+    }
+}
+void MoveRight_L()
+{
+    if(counter%2==0)
+    {
+        Left.push_back(Mid.front());
+        Mid.pop_front();
+    }
+    else
+    {
+        Left.push_back(Mid.back());
+        Mid.pop_back();
+    }
+}
+void MoveRight_R()
+{
+    if(counter%2==0)
+        Mid.push_back(Right.front());
+    else
+        Mid.push_front(Right.front());
+    Right.pop_front();
+}
+void Insert_L(int num)
+{
+    if(counter%2==0)
+        Mid.push_front(num);
+    else
+        Mid.push_back(num);
+}
+void Insert_R(int num)
+{
+    if(counter%2==0)
+        Mid.push_back(num);
+    else
+        Mid.push_front(num);
+}
+void Delete_L()
+{
+    if(counter%2==0)
+        Mid.pop_front();
+    else
+        Mid.pop_back();
+}
+void Delete_R()
+{
+    if(counter%2==0)
+        Mid.pop_back();
+    else
+        Mid.pop_front();
+}
+void Reverse()
+{
+    counter++;
+}

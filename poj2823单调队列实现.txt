@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cstdio>
+#include <vector>
+using namespace std;
+const int maxn=1e6;
+int number[maxn];
+struct Node
+{
+    int index,value;
+};
+int head1,tail1,head2,tail2,size1,size2,k;
+vector<int> ans1,ans2;
+Node object1[maxn+100];
+Node object2[maxn+100];
+void Push_min(int index);
+void Push_max(int index);
+int main()
+{
+    int n;
+    head1=head2=0;
+    tail1=tail2=-1;
+    scanf("%d%d",&n,&k);
+    for(int i=0;i<n;i++)
+        scanf("%d",&number[i]);
+    for(int i=0;i<n;i++)
+    {
+        Push_min(i);
+        Push_max(i);
+        if(i>=k-1)
+        {
+            ans1.push_back(object1[head1].value);
+            ans2.push_back(object2[head2].value);
+        }
+    }
+    for(int i=0;i<ans1.size();i++)
+    {
+        if(i)
+            printf(" ");
+        printf("%d",ans1[i]);
+    }
+    printf("\n");
+    for(int i=0;i<ans2.size();i++)
+    {
+        if(i)
+            printf(" ");
+        printf("%d",ans2[i]);
+    }
+    printf("\n");
+    return 0;
+}
+void Push_min(int index)
+{
+    int temp=tail1;
+    for(int i=tail1;i>=0&&i>temp-size1;i--)
+    {
+        if(object1[i].value<=number[index])
+            break;
+        tail1--;
+    }
+    tail1++;
+    if(tail1==head1)
+    {
+        head1=head1+size1;
+        tail1=head1;
+    }
+    object1[tail1].index=index;
+    object1[tail1].value=number[index];
+    size1=tail1-head1+1;
+    if(index-object1[head1].index>=k)
+    {
+        head1++;
+        size1--;
+    }
+}
+void Push_max(int index)
+{
+    int temp=tail2;
+    for(int i=tail2;i>=0&&i>temp-size2;i--)
+    {
+        if(object2[i].value>=number[index])
+            break;
+        tail2--;
+    }
+    tail2++;
+    if(tail2==head2)
+    {
+        head2=head2+size2;
+        tail2=head2;
+    }
+    object2[tail2].index=index;
+    object2[tail2].value=number[index];
+    size2=tail2-head2+1;
+    if(index-object2[head2].index>=k)
+    {
+        head2++;
+        size2--;
+    }
+}
